@@ -21,56 +21,73 @@ const slides = [
   }
 ]
 
-const arrowLeft = document.querySelector(".arrow_left");
-const arrowRight = document.querySelector(".arrow_right");
-const banner = document.querySelector('.banner-img');
-const tagLine = document.querySelector('.banner-tagline');
-const imgDisplay = './assets/images/slideshow/';
+const IMG_URL = './assets/images/slideshow/';
 
-const dots = document.querySelector(".dots");
-const selectDot = document.getElementsByClassName("dot");
-
+const arrowLeft   = document.querySelector(".arrow_left");
+const arrowRight  = document.querySelector(".arrow_right");
+const image       = document.querySelector('.banner-img');
+const tagLine     = document.querySelector('.banner-tagline');
+const dots        = document.querySelector(".dots");
 
 
 // ******************* VARIABLES *******************
 
 let currentSlide = 0;
-// Slide.length = 4;
-
-for (const object of slides) {
-  const addDot = document.createElement("span");
-  addDot.classList = "dot";
-  dots.appendChild(addDot);
-}
-
+let allDots;
 
 // ******************* FUNCTIONS *******************
 
-// Carousel update : img and tag
+/**
+ * Slides the current image to the right.
+ */
 function slideRight() {
-  currentSlide = (currentSlide + 1 ) % slides.length;
-  banner.setAttribute('src', imgDisplay + slides[currentSlide].image);
+  currentSlide      = (currentSlide + 1 ) % slides.length;
   tagLine.innerHTML = slides[currentSlide].tagLine;
+
+  image.setAttribute('src', IMG_URL + slides[currentSlide].image);
   updateDots();
 }
 
+/**
+ * Slides the banner to the left, updating the current slide, image, tagline, and dots.
+ */
 function slideLeft() {
-  currentSlide = (currentSlide + slides.length - 1) % slides.length;
-  banner.setAttribute('src', imgDisplay + slides[currentSlide].image);
+  currentSlide      = (currentSlide + slides.length - 1) % slides.length;
   tagLine.innerHTML = slides[currentSlide].tagLine;
+
+  image.setAttribute('src', IMG_URL + slides[currentSlide].image);
   updateDots();
 }
 
-// Carousel update : dots
+/**
+ * Updates the dots on the page to indicate the current slide.
+ */
 function updateDots() {
-  for (let i = 0; i < selectDot.length; i++) {
-    selectDot[i].classList.remove("dot_selected");
+  for (let i = 0; i < allDots.length; i++) {
+    allDots[i].classList.remove("dot_selected");
   }
-    selectDot[currentSlide].classList.add("dot_selected");
+
+    allDots[currentSlide].classList.add("dot_selected");
 }
 
+/**
+ * Launches the carousel by adding event listeners to the arrow buttons,
+ * creating dots for each slide, and selecting the first dot.
+ */
+function launchCarousel() {
+  arrowRight.addEventListener("click", slideRight);
+  arrowLeft.addEventListener("click", slideLeft);
+
+  for (const slide of slides) {
+    const addDot = document.createElement("span");
+    addDot.classList = "dot";
+    dots.appendChild(addDot);
+  }
+
+  allDots = document.getElementsByClassName("dot");
+  document.querySelector(".dot").classList.add("dot_selected");
+}
 
 // ******************* MAIN *******************
 
-arrowRight.addEventListener("click", slideRight);
-arrowLeft.addEventListener("click", slideLeft);
+launchCarousel();
